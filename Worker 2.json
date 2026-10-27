@@ -1,0 +1,235 @@
+{
+  "name": "Worker 2 - Derivación al equipo",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "ab007cc5-4931-4dbf-9e03-5dd0f5050a65",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Mensaje original del cliente: {{ $('Execute Workflow Trigger').item.json.original_input }}\nTipo de caso: {{ $('Execute Workflow Trigger').item.json.intent }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Sos un especialista en redacción de correos internos de una gomería. Escribí un correo breve para el equipo comercial que resuma el caso: qué necesita el cliente, los datos de contacto que haya dado (nombre, medida o vehículo, mail o teléfono) y los datos que faltan. Usá español rioplatense neutro y sin lenguaje inclusivo. No prometas precios, stock ni turnos."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "16505524-77dd-49c5-800f-1efc282398a7",
+      "name": "Redactar correo",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        272,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "skateordie9816@gmail.com",
+        "subject": "Derivación de consulta de cliente",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cd734912-29dc-417b-89ae-62ff0fe8e737",
+      "name": "Enviar correo al equipo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        608,
+        0
+      ],
+      "webhookId": "a9963d26-e074-4c42-b7ad-0a9ecc9f9dba",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YlxSkl5IuIWqSDMK",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "72c32874-3a45-499e-8834-8aeb39105006",
+              "name": "status",
+              "value": "success",
+              "type": "string"
+            },
+            {
+              "id": "9ce00ec9-caf7-453a-be08-b5f19271a7d3",
+              "name": "worker",
+              "value": "derivacion_equipo",
+              "type": "string"
+            },
+            {
+              "id": "acb7a298-ba58-449e-9341-36d92415fea2",
+              "name": "data.destinatario",
+              "value": "equipo_comercial",
+              "type": "string"
+            },
+            {
+              "id": "45bff407-041a-4dd4-a2a9-a58499f359c0",
+              "name": "data.enviado",
+              "value": "={{ $json.labelIds ? $json.labelIds.includes('SENT') : false }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7b71cf4f-675a-4a67-8c75-b065420c2d95",
+      "name": "Contrato de salida",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "27c2d01c-4fd5-483b-8be1-afe59c4ec62d",
+              "name": "status",
+              "value": "error",
+              "type": "string"
+            },
+            {
+              "id": "ac97a284-60d7-439e-afca-bb15e84d6e3d",
+              "name": "worker",
+              "value": "derivacion_equipo",
+              "type": "string"
+            },
+            {
+              "id": "0b0ec661-7a3d-44ac-8ae0-b6f7b726fdaa",
+              "name": "data.mensaje",
+              "value": "No se pudo enviar el correo al equipo",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3d2575b2-befb-4acd-b3d4-ec777c9b4e46",
+      "name": "Contrato de error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        864,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "16b90a4b-52b9-4bde-ba9d-0b4ca35a5822",
+      "name": "Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        272,
+        240
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8zfBxCehv5soM8b8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Redactar correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redactar correo": {
+      "main": [
+        [
+          {
+            "node": "Enviar correo al equipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar correo al equipo": {
+      "main": [
+        [
+          {
+            "node": "Contrato de salida",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Contrato de error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Redactar correo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": 120,
+    "availableInMCP": false
+  },
+  "versionId": "6660e91a-ceaf-40d4-862e-4cc084ffe20e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ead3b9cbcd35bcf7ec9b2ad7dc7907ac067c23c39f690df5c2356f1f62c846b1"
+  },
+  "nodeGroups": [],
+  "id": "rE9q6mMR4Hne8NQM",
+  "tags": []
+}
