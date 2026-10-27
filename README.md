@@ -17,12 +17,12 @@ Parte del workflow del Módulo 3 (memoria y contexto) y le suma las integracione
 ## Archivos del repositorio
 
 ```
-├── checkpoint4_nombre_apellido.json   # Workflow principal (Manager)
+├── checkpoint4_agustin_aguilar.json   # Workflow principal (Manager)
 ├── workers/
-│   ├── worker1_consulta_conocimiento.json
-│   └── worker2_derivacion_equipo.json
-├── Lista de credenciales.jpeg         # Sección Credentials de n8n (las 3 conexiones)
+│   ├── Worker 1.json
+│   └── Worker 2.json
 ├── Capturas/
+│   ├── Credentials lista.jpeg         # Sección Credentials de n8n (las 3 conexiones)
 │   ├── Credential Gmail.jpeg          # Credencial de Gmail conectada
 │   ├── Credential HubSpot.jpeg        # Credencial de HubSpot conectada
 │   └── Credential Slack.jpeg          # Credencial de Slack conectada
@@ -34,7 +34,7 @@ Parte del workflow del Módulo 3 (memoria y contexto) y le suma las integracione
 El workflow principal llama a dos sub-workflows, así que el orden importa:
 
 1. Importá primero los dos workers de la carpeta `workers/` (**Workflows → Import from File**).
-2. Importá `checkpoint4_nombre_apellido.json`.
+2. Importá `checkpoint4_agustin_aguilar.json`.
 3. En los nodos **Execute Workflow - Worker 1** y **Execute Workflow - Worker 2**, volvé a elegir cada worker en la lista (*From list*), porque los IDs cambian entre instancias.
 4. Conectá tus propias credenciales (Gmail, HubSpot, Slack, Airtable y Gemini) en cada nodo que las use. Las credenciales no se exportan en el `.json`.
 5. En el nodo de Slack, elegí tu canal. En los nodos de Airtable, elegí tu base y tabla (columnas: `Session_ID`, `Fecha de Actualización`, `Resumen Consolidado`, `Estado del Caso`, `Datos Clave`).
@@ -90,7 +90,7 @@ Cada conexión se autorizó solo con lo necesario para su función:
 
 Sección **Credentials** de n8n con las tres conexiones (HubSpot, Gmail y Slack, todas por OAuth2):
 
-![Credentials en n8n](Lista%20de%20credenciales.jpeg)
+![Credentials en n8n](Capturas/Credentials%20lista.jpeg)
 
 Detalle de cada conexión:
 
